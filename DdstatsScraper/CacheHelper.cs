@@ -15,7 +15,7 @@ namespace DdstatsScraper
 		{
 			Directory.CreateDirectory(_playerCacheFolderName);
 			string cachePath = Path.Combine(_playerCacheFolderName, $"{playerId}.json");
-			if (Directory.Exists(_playerCacheFolderName) && File.Exists(cachePath))
+			if (File.Exists(cachePath))
 			{
 				Console.WriteLine("Found player cache.");
 				return JsonConvert.DeserializeObject<DdstatsResponse>(await File.ReadAllTextAsync(cachePath));
