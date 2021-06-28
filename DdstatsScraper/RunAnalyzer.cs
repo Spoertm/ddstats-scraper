@@ -1,4 +1,5 @@
 ﻿using DdstatsScraper.Responses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,11 +13,11 @@ namespace DdstatsScraper
 		{
 			List<AllStatsResponse> statList = new()
 			{
-				new("Fastest level 2", FastestLevel2(games)),
-				new("Fastest level 3", FastestLevel3(games)),
-				new("Fastest level 4", FastestLevel4(games)),
-				new("Fastest levi down", FastestLeviDown(games)),
-				new("Fastest orb down", FastestOrbDown(games)),
+				new("Fastest level 2", FastestStat(games, game => game.LevelTwoTime, _level2Threshold)),
+				new("Fastest level 3", FastestStat(games, game => game.LevelThreeTime, _level3Threshold)),
+				new("Fastest level 4", FastestStat(games, game => game.LevelFourTime, _level4Threshold)),
+				new("Fastest levi down", FastestStat(games, game => game.LeviDownTime, _leviDownThreshold)),
+				new("Fastest orb down", FastestStat(games, game => game.OrbDownTime, _orbDownThreshold)),
 				new("Longest run", LongestRun(games)),
 				new("Longest pacifist run", LongestPacifist(games)),
 				new("Highest homing peak run", HighestHomingPeak(games)),
@@ -26,84 +27,21 @@ namespace DdstatsScraper
 			return statList;
 		}
 
-		public static StatResponse FastestLevel2(Game[] games)
+		public static StatResponse FastestStat(Game[] games, Func<Game, double> func, float threshold)
 		{
-			double fastestLevel2 = double.MaxValue;
+			double current, fastestStat = double.MaxValue;
 			int index = 0;
 			for (int i = 0; i < games.Length; i++)
 			{
-				if (games[i].LevelTwoTime < _level2Threshold || games[i].LevelTwoTime > fastestLevel2)
+				current = func(games[i]);
+				if (current < threshold || current > fastestStat)
 					continue;
 
-				fastestLevel2 = games[i].LevelTwoTime;
+				fastestStat = current;
 				index = i;
 			}
 
-			return new(games[index], fastestLevel2);
-		}
-
-		public static StatResponse FastestLevel3(Game[] games)
-		{
-			double fastestLevel3 = double.MaxValue;
-			int index = 0;
-			for (int i = 0; i < games.Length; i++)
-			{
-				if (games[i].LevelThreeTime < _level3Threshold || games[i].LevelThreeTime > fastestLevel3)
-					continue;
-
-				fastestLevel3 = games[i].LevelThreeTime;
-				index = i;
-			}
-
-			return new(games[index], fastestLevel3);
-		}
-
-		public static StatResponse FastestLevel4(Game[] games)
-		{
-			double fastestLevel4 = double.MaxValue;
-			int index = 0;
-			for (int i = 0; i < games.Length; i++)
-			{
-				if (games[i].LevelFourTime < _level4Threshold || games[i].LevelFourTime > fastestLevel4)
-					continue;
-
-				fastestLevel4 = games[i].LevelFourTime;
-				index = i;
-			}
-
-			return new(games[index], fastestLevel4);
-		}
-
-		public static StatResponse FastestLeviDown(Game[] games)
-		{
-			double fastestLeviDown = double.MaxValue;
-			int index = 0;
-			for (int i = 0; i < games.Length; i++)
-			{
-				if (games[i].LeviDownTime < _leviDownThreshold || games[i].LeviDownTime > fastestLeviDown)
-					continue;
-
-				fastestLeviDown = games[i].LeviDownTime;
-				index = i;
-			}
-
-			return new(games[index], fastestLeviDown);
-		}
-
-		public static StatResponse FastestOrbDown(Game[] games)
-		{
-			double fastestOrbDown = double.MaxValue;
-			int index = 0;
-			for (int i = 0; i < games.Length; i++)
-			{
-				if (games[i].OrbDownTime < _orbDownThreshold || games[i].OrbDownTime > fastestOrbDown)
-					continue;
-
-				fastestOrbDown = games[i].OrbDownTime;
-				index = i;
-			}
-
-			return new(games[index], fastestOrbDown);
+			return new(games[index], fastestStat);
 		}
 
 		public static StatResponse LongestRun(Game[] games)
