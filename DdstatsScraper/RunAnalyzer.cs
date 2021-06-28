@@ -15,6 +15,7 @@ namespace DdstatsScraper
 				new("Fastest level 2", FastestLevel2(games)),
 				new("Fastest level 3", FastestLevel3(games)),
 				new("Fastest level 4", FastestLevel4(games)),
+				new("Fastest levi down", FastestLeviDown(games)),
 				new("Fastest orb down", FastestOrbDown(games)),
 				new("Longest run", LongestRun(games)),
 				new("Longest pacifist run", LongestPacifist(games)),
@@ -71,6 +72,22 @@ namespace DdstatsScraper
 			}
 
 			return new(games[index], fastestLevel4);
+		}
+
+		public static StatResponse FastestLeviDown(Game[] games)
+		{
+			double fastestLeviDown = double.MaxValue;
+			int index = 0;
+			for (int i = 0; i < games.Length; i++)
+			{
+				if (games[i].LeviDownTime < _leviDownThreshold || games[i].LeviDownTime > fastestLeviDown)
+					continue;
+
+				fastestLeviDown = games[i].LeviDownTime;
+				index = i;
+			}
+
+			return new(games[index], fastestLeviDown);
 		}
 
 		public static StatResponse FastestOrbDown(Game[] games)
