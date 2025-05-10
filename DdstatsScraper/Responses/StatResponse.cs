@@ -1,4 +1,3 @@
-﻿namespace DdstatsScraper.Responses
-{
-	public record StatResponse(Game? Run, double? StatValue);
-}
+﻿namespace DdstatsScraper.Responses;
+
+public record StatResponse(Game? Run, double? StatValue);

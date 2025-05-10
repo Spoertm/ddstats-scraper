@@ -2,10 +2,8 @@
 using DdstatsScraper.Responses;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
-CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 Console.WindowWidth = 120;
 while (true)
 {
